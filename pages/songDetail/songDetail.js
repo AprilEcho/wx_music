@@ -1,4 +1,5 @@
 // pages/songDetail/songDetail.js
+import PubSub from "pubsub-js"
 import request from "../../utils/request";
 
 const appInstance = getApp()
@@ -89,8 +90,22 @@ Page({
   },
 
   //切换歌曲
-  handleSwitch(event){
+  handleSwitch(event) {
     let type = event.currentTarget.id
+    //关闭当前播放的音乐
+    this.backgroundAudioManager.stop()
+
+    //拿到下/上一首的id
+    PubSub.subscribe('musicId', (msg, musicId) => {
+      //获取音乐详情信息
+      this.getMusicInfo(musicId)
+      //自动播放当前音乐
+      this.musicControl(true, musicId)
+      //取消订阅
+      PubSub.unsubscribe('musicId')
+    })
+    //发布消息数据给recommendSong页面
+    PubSub.publish('switchType', type)
   },
 
   /**
