@@ -11,7 +11,8 @@ Page({
   data: {
     isPlay: false,//音乐是否播放
     song: {},
-    musicId: ''
+    musicId: '',
+    musicLink:''
   },
 
   /**
@@ -62,15 +63,21 @@ Page({
     // this.setData({
     //   isPlay
     // })
-    let {musicId} = this.data
-    this.musicControl(isPlay, musicId)
+    let {musicId,musicLink} = this.data
+    this.musicControl(isPlay, musicId,musicLink)
   },
 
   //控制音乐播放/暂时功能
-  async musicControl(isPlay, musicId) {
+  async musicControl(isPlay, musicId, musicLink) {
     if (isPlay) {//音乐播放
-      let musicLinkData = await request('/song/url', {id: musicId})
-      this.backgroundAudioManager.src = musicLinkData.data[0].url
+      if (!musicLink) {
+        let musicLinkData = await request('/song/url', {id: musicId})
+        musicLink = musicLinkData.data[0].url
+        this.setData({
+          musicLink
+        })
+      }
+      this.backgroundAudioManager.src = musicLink
       this.backgroundAudioManager.title = this.data.song.name
     } else {
       this.backgroundAudioManager.pause()
