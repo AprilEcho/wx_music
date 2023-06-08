@@ -3,7 +3,7 @@
   <view class="header">
     <view class="searchInput">
       <text class="searchIcon iconfont icon-search1"></text>
-      <input type="text" placeholder="{{placeHolderContent}}" placeholder-class="placeholder"></input>
+      <input bindinput="handleInputChange" type="text" placeholder="{{placeHolderContent}}" placeholder-class="placeholder"></input>
     </view>
     <text class="cancel">取消</text>
   </view>
