@@ -51,10 +51,22 @@ Page({
       this.changePlayState(false)
     })
 
+    //监听音乐停止
+    this.backgroundAudioManager.onEnded(() => {
+      //自动切换下一首歌曲
+      PubSub.publish('switchType', 'next')
+
+      //还原进度条长度
+      this.setData({
+        currentWidth: 0,
+        currentTime: '00:00'
+      })
+    })
+
     //监听音乐实时播放
     this.backgroundAudioManager.onTimeUpdate(() => {
       let currentTime = moment(this.backgroundAudioManager.currentTime * 1000).format('mm:ss')
-      let currentWidth = this.backgroundAudioManager.currentTime / this.backgroundAudioManager.duration *450
+      let currentWidth = this.backgroundAudioManager.currentTime / this.backgroundAudioManager.duration * 450
       this.setData({
         currentTime,
         currentWidth
