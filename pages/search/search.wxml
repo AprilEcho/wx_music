@@ -3,8 +3,22 @@
   <view class="header">
     <view class="searchInput">
       <text class="searchIcon iconfont icon-search1"></text>
-      <input type="text" placeholder="搜索歌曲" placeholder-class="placeholder"></input>
+      <input type="text" placeholder="{{placeHolderContent}}" placeholder-class="placeholder"></input>
     </view>
     <text class="cancel">取消</text>
   </view>
+
+  <!--  热搜版-->
+  <view class="hotContainer">
+    <view class="title">热搜榜</view>
+    <!--    热搜列表-->
+    <view class="hotList">
+      <view class="hotItem" wx:for="{{hotList}}" wx:key="searchWord">
+        <text class="order">{{index + 1}}</text>
+        <text>{{item.searchWord}}</text>
+        <image class="icomImage" wx:if="{{item.iconUrl}}" src="{{item.iconUrl}}"></image>
+      </view>
+    </view>
+  </view>
+
 </view>

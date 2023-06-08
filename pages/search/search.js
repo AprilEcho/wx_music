@@ -1,10 +1,14 @@
 // pages/search/search.js
+import request from "../../utils/request";
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
+    placeHolderContent: '',//搜索框默认内容
+    hotList:[],//热搜榜列表
 
   },
 
@@ -12,8 +16,18 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    this.getInitData()
   },
+  //获取初始化数据
+  async getInitData() {
+    let placeholderData = await request('/search/default')
+    let hotListData = await request('/search/hot/detail')
+    this.setData({
+      placeHolderContent:placeholderData.data.showKeyword,
+      hotList:hotListData.data
+    })
+  },
+
 
   /**
    * 生命周期函数--监听页面初次渲染完成
