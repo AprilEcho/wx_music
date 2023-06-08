@@ -30,14 +30,21 @@ Page({
     let resultArr = [];
     let topListItems = await request('/toplist')
     while (index < 5) {
-      let topListData = await request('/playlist/detail',{id:topListItems.list[index].id})
-      let topListItem = {name:topListData.playlist.name,tracks:topListData.playlist.tracks.slice(0,3)}
+      let topListData = await request('/playlist/detail', {id: topListItems.list[index].id})
+      let topListItem = {name: topListData.playlist.name, tracks: topListData.playlist.tracks.slice(0, 3)}
       resultArr.push(topListItem)
       index++
       this.setData({
-        topList:resultArr
+        topList: resultArr
       })
     }
+  },
+
+  //跳转到推荐页面
+  toRecommentSongs() {
+    wx.navigateTo({
+      url: '/pages/recommendSong/recommendSong'
+    })
   },
 
   /**
