@@ -20,7 +20,7 @@
   position: absolute;
   right: 30rpx;
   top: 0;
-  z-index: 10;
+  z-index: 999;
   font-size: 30rpx;
 }
 
@@ -98,6 +98,7 @@
   margin-left: 20rpx;
   border-bottom: 1rpx solid #eee;
   font-size: 27rpx;
+  white-space: nowrap;
 }
 
 /* 搜索历史 */

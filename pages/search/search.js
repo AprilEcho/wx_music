@@ -1,7 +1,7 @@
 // pages/search/search.js
 import request from "../../utils/request";
 
-let isSend = true
+let timeout = null
 
 
 Page({
@@ -14,6 +14,7 @@ Page({
     hotList: [],//热搜榜列表
     searchContent: '',//搜索框输入的内容
     searchList: [],//模糊匹配的数据
+    historyList: [],//历史记录列表
 
   },
 
@@ -22,6 +23,8 @@ Page({
    */
   onLoad: function (options) {
     this.getInitData()
+
+    this.getSearchHistory()
   },
   //获取初始化数据
   async getInitData() {
@@ -38,21 +41,52 @@ Page({
     this.setData({
       searchContent: event.detail.value.trim()
     })
-    if (!isSend) return
-    isSend = false
-    setTimeout(() => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
       //模糊匹配
       this.getSearchList()
-      isSend = true
-    }, 300)
+    }, 2000)
   },
   //搜索数据功能函数
   async getSearchList() {
-    let searchListData = await request('/search', {keywords: this.data.searchContent, limit: 10})
+    if (!this.data.searchContent) {
+      this.setData({
+        searchList: []
+      })
+      return
+    }
+    let {searchContent, historyList} = this.data
+    let searchListData = await request('/search', {keywords: searchContent, limit: 10})
     this.setData({
       searchList: searchListData.result.songs
     })
+
+    //添加搜索历史
+    historyList.unshift(searchContent)
+    this.setData({
+      historyList: Array.from(new Set(historyList))
+    })
+    wx.setStorageSync('searchHistory', Array.from(new Set(historyList)))
   },
+
+  //获取本地历史记录
+  getSearchHistory() {
+    let historyList = wx.getStorageSync('searchHistory')
+    if (historyList) {
+      this.setData({
+        historyList
+      })
+    }
+  },
+
+  //清空搜索内容
+  clearSearchContent() {
+    this.setData({
+      searchContent: '',
+      searchList: []
+    })
+  },
+
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
