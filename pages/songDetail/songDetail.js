@@ -1,5 +1,6 @@
 // pages/songDetail/songDetail.js
 import PubSub from "pubsub-js"
+import moment from "moment";
 import request from "../../utils/request";
 
 const appInstance = getApp()
@@ -12,7 +13,10 @@ Page({
     isPlay: false,//音乐是否播放
     song: {},
     musicId: '',
-    musicLink:''
+    musicLink: '',
+    currentTime: '00:00',//当前时间
+    durationTime: '00:00',//总时长
+    currentWidth: 0,//实时进度条
   },
 
   /**
@@ -46,6 +50,16 @@ Page({
     this.backgroundAudioManager.onStop(() => {
       this.changePlayState(false)
     })
+
+    //监听音乐实时播放
+    this.backgroundAudioManager.onTimeUpdate(() => {
+      let currentTime = moment(this.backgroundAudioManager.currentTime * 1000).format('mm:ss')
+      let currentWidth = this.backgroundAudioManager.currentTime / this.backgroundAudioManager.duration *450
+      this.setData({
+        currentTime,
+        currentWidth
+      })
+    })
   },
 
   //修改播放状态的功能函数
@@ -63,8 +77,8 @@ Page({
     // this.setData({
     //   isPlay
     // })
-    let {musicId,musicLink} = this.data
-    this.musicControl(isPlay, musicId,musicLink)
+    let {musicId, musicLink} = this.data
+    this.musicControl(isPlay, musicId, musicLink)
   },
 
   //控制音乐播放/暂时功能
@@ -87,8 +101,10 @@ Page({
   //获取音乐详情
   async getMusicInfo(musicId) {
     let songData = await request('/song/detail', {ids: musicId})
+    let durationTime = moment(songData.songs[0].dt).format('mm:ss')
     this.setData({
-      song: songData.songs[0]
+      song: songData.songs[0],
+      durationTime
     })
     //修改窗口标题
     wx.setNavigationBarTitle({

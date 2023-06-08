@@ -9,17 +9,17 @@
 
   <!-- 进度条 -->
   <view class="progressControl">
-    <text>00:00</text>
+    <text>{{currentTime}}</text>
     <!-- 总进度条 -->
     <view class="barControl">
       <!-- 实施进度条 -->
-      <view class="audio-currentTime-Bar" style="">
+      <view class="audio-currentTime-Bar" style="width:{{currentWidth + 'rpx'}}">
         <!-- 小圆球 -->
         <view class="audio-circle">
         </view>
       </view>
     </view>
-    <text>03:00</text>
+    <text>{{durationTime}}</text>
   </view>
 
   <!--  底部控制播放区域-->
